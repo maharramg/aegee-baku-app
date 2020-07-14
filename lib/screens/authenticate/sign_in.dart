@@ -1,4 +1,5 @@
 import 'package:aegeeapp/animations/fade_animation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:aegeeapp/services/auth.dart';
 import 'package:aegeeapp/shared/constants.dart';
@@ -46,7 +47,9 @@ class _SignInState extends State<SignIn> {
               child: Container(
                 child: Column(
                   children: <Widget>[
-                    FadeAnimation(1, Container(
+                    FadeAnimation(
+                      1,
+                      Container(
                         height: 300,
                         decoration: BoxDecoration(
                           image: DecorationImage(
@@ -74,8 +77,8 @@ class _SignInState extends State<SignIn> {
                               child: FadeAnimation(
                                   1.4,
                                   Container(
-                                    margin:
-                                        EdgeInsets.fromLTRB(30.0, 140.0, 60.0, 0),
+                                    margin: EdgeInsets.fromLTRB(
+                                        30.0, 140.0, 60.0, 0),
                                     child: Align(
                                       alignment: Alignment.topRight,
                                       child: Text(
@@ -102,8 +105,8 @@ class _SignInState extends State<SignIn> {
                             FadeAnimation(
                               1.6,
                               TextFormField(
-                                decoration:
-                                    textInputDecoration.copyWith(hintText: 'Email'),
+                                decoration: textInputDecoration.copyWith(
+                                    hintText: 'Email'),
                                 validator: (val) =>
                                     val.isEmpty ? 'Enter an email' : null,
                                 onChanged: (val) {
@@ -135,7 +138,8 @@ class _SignInState extends State<SignIn> {
                                 RaisedButton(
                                     color: Colors.indigo[500],
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50.0)),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0)),
                                     child: Text(
                                       'Sign In',
                                       style: TextStyle(color: Colors.white),
@@ -143,26 +147,52 @@ class _SignInState extends State<SignIn> {
                                     onPressed: () async {
                                       if (_formKey.currentState.validate()) {
                                         setState(() => loading = true);
-                                        dynamic result =
-                                            await _auth.signInWithEmailAndPassword(
+                                        dynamic result = await _auth
+                                            .signInWithEmailAndPassword(
                                                 email, password);
-                                        Toast.show("Logged In", context, duration: Toast.LENGTH_SHORT, backgroundColor: Colors.lightGreen);
+                                        Toast.show("Logged In", context,
+                                            duration: Toast.LENGTH_SHORT,
+                                            backgroundColor: Colors.lightGreen);
                                         if (result == null) {
                                           setState(() {
                                             loading = false;
                                             error =
                                                 'Could not sign in with those credentials';
                                           });
-                                          Toast.show("Error log in", context,duration: Toast.LENGTH_LONG, backgroundColor: Colors.red);
+                                          Toast.show("Error log in", context,
+                                              duration: Toast.LENGTH_LONG,
+                                              backgroundColor: Colors.red);
                                         }
                                       }
                                     }),
                               ),
                             ),
                             SizedBox(height: 12.0),
+                            FadeAnimation(
+                              2,
+                              RichText(
+                                text: TextSpan(
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12.0),
+                                  children: <TextSpan>[
+                                    TextSpan(text: "Don't have an account? "),
+                                    TextSpan(
+                                      text: "Register",
+                                      style:
+                                          TextStyle(color: Colors.blueAccent),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          widget.toggleView();
+                                        },
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                             Text(
                               error,
-                              style: TextStyle(color: Colors.red, fontSize: 14.0),
+                              style:
+                                  TextStyle(color: Colors.red, fontSize: 14.0),
                             ),
                           ],
                         ),
