@@ -30,18 +30,6 @@ class _RegisterState extends State<Register> {
         ? Loading()
         : Scaffold(
             backgroundColor: Colors.white,
-//            appBar: AppBar(
-//              backgroundColor: Colors.indigo[800],
-//              elevation: 0.0,
-//              title: Text('Sign in'),
-//              actions: <Widget>[
-//                FlatButton.icon(
-//                  icon: Icon(Icons.person),
-//                  label: Text('Register'),
-//                  onPressed: () => widget.toggleView(),
-//                ),
-//              ],
-//            ),
             body: SingleChildScrollView(
               child: Container(
                 child: Column(
@@ -58,16 +46,16 @@ class _RegisterState extends State<Register> {
                         child: Stack(
                           children: <Widget>[
                             Positioned(
-                                top: 30,
-                                right: 60,
-                                width: 400,
-                                height: 200,
+                                top: 90,
+                                right: 115,
+                                width: 300,
+                                height: 150,
                                 child: FadeAnimation(
                                   1,
                                   Container(
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
-                                        image: AssetImage('assets/girl.png'),
+                                        image: AssetImage('assets/boy.png'),
                                       ),
                                     ),
                                   ),
@@ -77,7 +65,7 @@ class _RegisterState extends State<Register> {
                                   1.4,
                                   Container(
                                     margin: EdgeInsets.fromLTRB(
-                                        30.0, 140.0, 60.0, 0),
+                                        30.0, 140.0, 20.0, 0),
                                     child: Align(
                                       alignment: Alignment.topRight,
                                       child: Text(
