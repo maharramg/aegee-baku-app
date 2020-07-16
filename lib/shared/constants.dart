@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 const textInputDecoration = InputDecoration(
-  fillColor: Colors.white,
+  contentPadding: EdgeInsets.all(15.0),
+  border: OutlineInputBorder(
+    borderRadius: const BorderRadius.all(
+      const Radius.circular(30.0),
+    ),
+  ),
   filled: true,
-  contentPadding: EdgeInsets.all(8.0),
-  enabledBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.white, width: 2.0),
-  ),
-  focusedBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.indigo, width: 2.0),
-  ),
+  hintStyle: TextStyle(color: Colors.grey),
+  fillColor: Colors.white
 );

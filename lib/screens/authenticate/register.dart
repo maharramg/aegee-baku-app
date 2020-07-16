@@ -83,7 +83,7 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(70.0),
+                      padding: const EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 0),
                       child: Form(
                         key: _formKey,
                         child: Column(
@@ -93,7 +93,9 @@ class _RegisterState extends State<Register> {
                               1.6,
                               TextFormField(
                                 decoration: textInputDecoration.copyWith(
-                                    hintText: 'Email'),
+                                  hintText: 'Email',
+                                  icon: Icon(Icons.email),
+                                ),
                                 validator: (val) =>
                                     val.isEmpty ? 'Enter an email' : null,
                                 onChanged: (val) {
@@ -107,7 +109,9 @@ class _RegisterState extends State<Register> {
                               TextFormField(
                                 obscureText: true,
                                 decoration: textInputDecoration.copyWith(
-                                    hintText: 'Password'),
+                                  hintText: 'Password',
+                                  icon: Icon(Icons.fingerprint),
+                                ),
                                 validator: (val) => val.length < 6
                                     ? 'Enter a password 6+ chars long'
                                     : null,
@@ -123,29 +127,32 @@ class _RegisterState extends State<Register> {
                               child: FadeAnimation(
                                 2,
                                 RaisedButton(
-                                    color: Colors.indigo[500],
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(50.0)),
-                                    child: Text(
-                                      'Register',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () async {
-                                      if (_formKey.currentState.validate()) {
-                                        setState(() => loading = true);
-                                        dynamic result = await _auth
-                                            .registerWithEmailAndPassword(
-                                                email, password);
-                                        if (result == null) {
-                                          setState(() {
+                                  color: Colors.indigo[500],
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
+                                  child: Text(
+                                    'Register',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    if (_formKey.currentState.validate()) {
+                                      setState(() => loading = true);
+                                      dynamic result = await _auth
+                                          .registerWithEmailAndPassword(
+                                              email, password);
+                                      if (result == null) {
+                                        setState(
+                                          () {
                                             loading = false;
                                             error =
                                                 'Please supply a valid email';
-                                          });
-                                        }
+                                          },
+                                        );
                                       }
-                                    }),
+                                    }
+                                  },
+                                ),
                               ),
                             ),
                             SizedBox(height: 12.0),

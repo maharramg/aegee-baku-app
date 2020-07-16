@@ -84,7 +84,7 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(70.0),
+                      padding: const EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 0),
                       child: Form(
                         key: _formKey,
                         child: Column(
@@ -94,7 +94,9 @@ class _SignInState extends State<SignIn> {
                               1.6,
                               TextFormField(
                                 decoration: textInputDecoration.copyWith(
-                                    hintText: 'Email'),
+                                  hintText: 'Email',
+                                  icon: Icon(Icons.email),
+                                ),
                                 validator: (val) =>
                                     val.isEmpty ? 'Enter an email' : null,
                                 onChanged: (val) {
@@ -108,7 +110,9 @@ class _SignInState extends State<SignIn> {
                               TextFormField(
                                 obscureText: true,
                                 decoration: textInputDecoration.copyWith(
-                                    hintText: 'Password'),
+                                  hintText: 'Password',
+                                  icon: Icon(Icons.fingerprint),
+                                ),
                                 validator: (val) => val.length < 6
                                     ? 'Enter a password 6+ chars long'
                                     : null,
