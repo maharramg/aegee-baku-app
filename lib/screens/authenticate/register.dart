@@ -21,8 +21,11 @@ class _RegisterState extends State<Register> {
   bool loading = false;
 
   // text field state
+  String firstName = '';
+  String lastName = '';
   String email = '';
   String password = '';
+  String passwordC = '';
 
   @override
   Widget build(BuildContext context) {
@@ -46,49 +49,83 @@ class _RegisterState extends State<Register> {
                         child: Stack(
                           children: <Widget>[
                             Positioned(
-                                top: 90,
-                                right: 115,
-                                width: 300,
-                                height: 150,
-                                child: FadeAnimation(
-                                  1,
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage('assets/boy.png'),
-                                      ),
+                              top: 90,
+                              right: 115,
+                              width: 300,
+                              height: 150,
+                              child: FadeAnimation(
+                                1,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage('assets/boy.png'),
                                     ),
                                   ),
-                                )),
+                                ),
+                              ),
+                            ),
                             Positioned(
                               child: FadeAnimation(
-                                  1.4,
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(
-                                        30.0, 140.0, 20.0, 0),
-                                    child: Align(
-                                      alignment: Alignment.topRight,
-                                      child: Text(
-                                        "Register",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 40,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                1.4,
+                                Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(30.0, 140.0, 20.0, 0),
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      "Register",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  )),
-                            )
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 0),
+                      padding: const EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 0),
                       child: Form(
                         key: _formKey,
                         child: Column(
                           children: <Widget>[
-                            SizedBox(height: 20.0),
+//                            FadeAnimation(
+//                              1.6,
+//                              TextFormField(
+//                                decoration: textInputDecoration.copyWith(
+//                                  hintText: 'First Name',
+//                                  icon: Icon(Icons.person),
+//                                ),
+//                                validator: (val) => val.isEmpty
+//                                    ? 'Enter your first name'
+//                                    : null,
+//                                onChanged: (val) {
+//                                  setState(() => firstName = val);
+//                                },
+//                              ),
+//                            ),
+//                            SizedBox(
+//                              height: 20.0,
+//                            ),
+//                            FadeAnimation(
+//                              1.6,
+//                              TextFormField(
+//                                decoration: textInputDecoration.copyWith(
+//                                  hintText: 'Last Name',
+//                                  icon: Icon(Icons.person),
+//                                ),
+//                                validator: (val) =>
+//                                    val.isEmpty ? 'Enter your last name' : null,
+//                                onChanged: (val) {
+//                                  setState(() => lastName = val);
+//                                },
+//                              ),
+//                            ),
+//                            SizedBox(height: 20.0),
                             FadeAnimation(
                               1.6,
                               TextFormField(
@@ -121,6 +158,25 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             SizedBox(height: 20.0),
+//                            FadeAnimation(
+//                              1.8,
+//                              TextFormField(
+//                                obscureText: true,
+//                                decoration: textInputDecoration.copyWith(
+//                                  hintText: 'Confirm Password',
+//                                  icon: Icon(Icons.fingerprint),
+//                                ),
+//                                validator: (val) => val.length < 6
+//                                    ? 'Enter a password 6+ chars long'
+//                                    : null,
+//                                onChanged: (val) {
+//                                  setState(() => passwordC = val);
+//                                },
+//                              ),
+//                            ),
+//                            SizedBox(
+//                              height: 10,
+//                            ),
                             ButtonTheme(
                               minWidth: 100.0,
                               height: 40.0,

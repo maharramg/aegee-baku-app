@@ -1,3 +1,4 @@
+import 'package:aegeeapp/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:aegeeapp/models/user.dart';
 
@@ -47,6 +48,10 @@ class AuthService {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+
+      //create a new document for the user with the uid
+      await DatabaseService(uid: user.uid).updateUserData(email, password);
+
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());
