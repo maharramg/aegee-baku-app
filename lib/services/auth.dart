@@ -12,9 +12,13 @@ class AuthService {
 
   // auth change user stream
   Stream<User> get user {
-    return _auth.onAuthStateChanged
-        //.map((FirebaseUser user) => _userFromFirebaseUser(user));
-        .map(_userFromFirebaseUser);
+    return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
+  }
+
+  // get current user id
+  Future<String> getCurrentUserID() async {
+    final FirebaseUser user = await _auth.currentUser();
+    return user.uid;
   }
 
   // sign in anon
@@ -22,9 +26,16 @@ class AuthService {
     try {
       AuthResult result = await _auth.signInAnonymously();
       FirebaseUser user = result.user;
+
+      await DatabaseService(uid: user.uid).updateUserData(
+          "Guest",
+          user.uid.substring(24, 28),
+          "${user.uid.substring(24, 28)}@gmail.com",
+          "${user.uid.substring(24, 28)}");
+
       return _userFromFirebaseUser(user);
-    } catch (e) {
-      print(e.toString());
+    } catch (error) {
+      print(error.toString());
       return null;
     }
   }
@@ -43,14 +54,16 @@ class AuthService {
   }
 
   // register with email and password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(
+      String firstName, String lastName, String email, String password) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
 
       //create a new document for the user with the uid
-      await DatabaseService(uid: user.uid).updateUserData(email, password);
+      await DatabaseService(uid: user.uid)
+          .updateUserData(firstName, lastName, email, password);
 
       return _userFromFirebaseUser(user);
     } catch (error) {

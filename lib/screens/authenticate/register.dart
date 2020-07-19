@@ -93,39 +93,39 @@ class _RegisterState extends State<Register> {
                         key: _formKey,
                         child: Column(
                           children: <Widget>[
-//                            FadeAnimation(
-//                              1.6,
-//                              TextFormField(
-//                                decoration: textInputDecoration.copyWith(
-//                                  hintText: 'First Name',
-//                                  icon: Icon(Icons.person),
-//                                ),
-//                                validator: (val) => val.isEmpty
-//                                    ? 'Enter your first name'
-//                                    : null,
-//                                onChanged: (val) {
-//                                  setState(() => firstName = val);
-//                                },
-//                              ),
-//                            ),
-//                            SizedBox(
-//                              height: 20.0,
-//                            ),
-//                            FadeAnimation(
-//                              1.6,
-//                              TextFormField(
-//                                decoration: textInputDecoration.copyWith(
-//                                  hintText: 'Last Name',
-//                                  icon: Icon(Icons.person),
-//                                ),
-//                                validator: (val) =>
-//                                    val.isEmpty ? 'Enter your last name' : null,
-//                                onChanged: (val) {
-//                                  setState(() => lastName = val);
-//                                },
-//                              ),
-//                            ),
-//                            SizedBox(height: 20.0),
+                            FadeAnimation(
+                              1.6,
+                              TextFormField(
+                                decoration: textInputDecoration.copyWith(
+                                  hintText: 'First Name',
+                                  icon: Icon(Icons.person),
+                                ),
+                                validator: (val) => val.isEmpty
+                                    ? 'Enter your first name'
+                                    : null,
+                                onChanged: (val) {
+                                  setState(() => firstName = val);
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            FadeAnimation(
+                              1.6,
+                              TextFormField(
+                                decoration: textInputDecoration.copyWith(
+                                  hintText: 'Last Name',
+                                  icon: Icon(Icons.person),
+                                ),
+                                validator: (val) =>
+                                    val.isEmpty ? 'Enter your last name' : null,
+                                onChanged: (val) {
+                                  setState(() => lastName = val);
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 20.0),
                             FadeAnimation(
                               1.6,
                               TextFormField(
@@ -195,8 +195,7 @@ class _RegisterState extends State<Register> {
                                     if (_formKey.currentState.validate()) {
                                       setState(() => loading = true);
                                       dynamic result = await _auth
-                                          .registerWithEmailAndPassword(
-                                              email, password);
+                                          .registerWithEmailAndPassword(firstName, lastName, email, password);
                                       if (result == null) {
                                         setState(
                                           () {

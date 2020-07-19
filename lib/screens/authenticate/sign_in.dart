@@ -160,6 +160,41 @@ class _SignInState extends State<SignIn> {
                               ),
                             ),
                             SizedBox(height: 12.0),
+                            ButtonTheme(
+                              minWidth: 100.0,
+                              height: 40.0,
+                              child: FadeAnimation(
+                                2,
+                                RaisedButton(
+                                    color: Colors.indigo[500],
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50.0)),
+                                    child: Text(
+                                      'Sign In as a Guest',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () async {
+                                      setState(() => loading = true);
+                                      dynamic result = await _auth.signInAnon();
+                                      Toast.show("Logged In", context,
+                                          duration: Toast.LENGTH_SHORT,
+                                          backgroundColor: Colors.lightGreen);
+                                      if (result == null) {
+                                        setState(() {
+                                          loading = false;
+                                          error = 'Something went wrong';
+                                        });
+                                        Toast.show("Error log in", context,
+                                            duration: Toast.LENGTH_LONG,
+                                            backgroundColor: Colors.red);
+                                      }
+                                    }),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 12,
+                            ),
                             FadeAnimation(
                               2,
                               RichText(
