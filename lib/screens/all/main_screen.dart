@@ -1,8 +1,11 @@
+import 'package:aegeeapp/models/user.dart';
 import 'package:aegeeapp/screens/all/home.dart';
 import 'package:aegeeapp/screens/all/profile.dart';
 import 'package:aegeeapp/screens/all/settings.dart';
 import 'package:aegeeapp/services/auth.dart';
+import 'package:aegeeapp/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -48,6 +51,7 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<User>(context);
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
       child: Drawer(
@@ -62,6 +66,22 @@ class MyDrawer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
+                    CircleAvatar(),
+                    StreamBuilder(
+                      stream: DatabaseService(uid: user.uid).userData,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Text("Loading..."),
+                          );
+                        }
+                        UserData userData = snapshot.data;
+                        return Text(
+                          "${userData.firstName} ${userData.lastName}",
+                          style: TextStyle(fontSize: 20),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),

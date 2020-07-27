@@ -17,6 +17,7 @@ class DatabaseService {
       'last_name': lastName,
       'email': email,
       'password': password,
+      'admin': false
     });
   }
 
@@ -26,6 +27,7 @@ class DatabaseService {
         uid: uid,
         firstName: snapshot.data['first_name'],
         lastName: snapshot.data['last_name'],
+        admin: snapshot.data['admin'],
     );
   }
 

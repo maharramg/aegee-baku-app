@@ -1,18 +1,16 @@
 import 'package:aegeeapp/models/user.dart';
 import 'package:aegeeapp/services/database.dart';
+import 'package:aegeeapp/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
-
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-
-  String firstName = "";
-  String lastName = "";
+  bool _isAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +25,27 @@ class _ProfileState extends State<Profile> {
           );
         }
         UserData userData = snapshot.data;
-        firstName = userData.firstName;
-        lastName = userData.lastName;
-        return Text(
-          "${userData.firstName} ${userData.lastName}",
-          style: TextStyle(fontSize: 20),
+        _isAdmin = userData.admin;
+        return Container(
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Full Name: ${userData.firstName} ${userData.lastName}",
+                style: TextStyle(fontSize: 20),
+              ),
+              adminFeature(),
+            ],
+          ),
         );
       },
     );
+  }
+
+  Widget adminFeature() {
+    if(_isAdmin == true) {
+      return Text("You are an admin");
+    } else {
+      return Container();
+    }
   }
 }

@@ -26,9 +26,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Container(
       child: ListView.builder(
-          itemCount: titles.length,
-          itemBuilder: (BuildContext context, int index) =>
-              buildPostCard(context, index)),
+        itemCount: titles.length,
+        itemBuilder: (BuildContext context, int index) =>
+            buildPostCard(context, index),
+      ),
     );
   }
 
