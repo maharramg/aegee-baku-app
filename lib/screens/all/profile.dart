@@ -10,6 +10,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
   bool _isAdmin;
 
   @override
@@ -20,9 +21,7 @@ class _ProfileState extends State<Profile> {
       stream: DatabaseService(uid: user.uid).userData,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
-            child: Text("Loading..."),
-          );
+          return Loading();
         }
         UserData userData = snapshot.data;
         _isAdmin = userData.admin;
@@ -42,7 +41,7 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget adminFeature() {
-    if(_isAdmin == true) {
+    if (_isAdmin == true) {
       return Text("You are an admin");
     } else {
       return Container();

@@ -24,17 +24,15 @@ class DatabaseService {
   // user data from snapshots
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
-        uid: uid,
-        firstName: snapshot.data['first_name'],
-        lastName: snapshot.data['last_name'],
-        admin: snapshot.data['admin'],
+      uid: uid,
+      firstName: snapshot.data['first_name'],
+      lastName: snapshot.data['last_name'],
+      admin: snapshot.data['admin'],
     );
   }
 
   // get user doc stream
   Stream<UserData> get userData {
-    return userCollection.document(uid).snapshots()
-        .map(_userDataFromSnapshot);
+    return userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   }
-
 }
