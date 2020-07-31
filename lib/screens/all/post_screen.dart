@@ -16,25 +16,27 @@ class PostScreen extends StatelessWidget {
         title: Text("Post"),
         centerTitle: true,
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Center(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 30,
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Center(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 30,
+                  ),
                 ),
               ),
-            ),
-            Image(
-              image: AssetImage(image),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(text),
-            )
-          ],
+              Image(
+                image: NetworkImage(image),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(text),
+              )
+            ],
+          ),
         ),
       ),
     );

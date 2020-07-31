@@ -1,7 +1,12 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:aegeeapp/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddPost extends StatefulWidget {
   @override
@@ -14,10 +19,13 @@ class _AddPostState extends State<AddPost> {
 
   final _formKey = GlobalKey<FormState>();
 
+  File _image;
+  String imageLocation;
+
   String title;
   String image;
-  String date;
-  String publisher;
+  String date = "Today";
+  String publisher = "Anonymous";
   String text;
 
   @override
@@ -47,43 +55,16 @@ class _AddPostState extends State<AddPost> {
                 SizedBox(
                   height: 20,
                 ),
-                TextFormField(
-                  decoration: textInputDecoration.copyWith(
-                    hintText: 'image',
+                RaisedButton(
+                  color: Colors.indigo[500],
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0)),
+                  child: Text(
+                    'Upload an image',
+                    style: TextStyle(color: Colors.white),
                   ),
-                  validator: (val) => val.length < 1
-                      ? 'Title must be at least 1 character'
-                      : null,
-                  onChanged: (val) {
-                    image = val;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  decoration: textInputDecoration.copyWith(
-                    hintText: 'date',
-                  ),
-                  validator: (val) => val.length < 1
-                      ? 'Title must be at least 1 character'
-                      : null,
-                  onChanged: (val) {
-                    date = val;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  decoration: textInputDecoration.copyWith(
-                    hintText: 'publisher',
-                  ),
-                  validator: (val) => val.length < 1
-                      ? 'Title must be at least 1 character'
-                      : null,
-                  onChanged: (val) {
-                    publisher = val;
+                  onPressed: () async {
+                    getImage();
                   },
                 ),
                 SizedBox(
@@ -101,19 +82,25 @@ class _AddPostState extends State<AddPost> {
                   },
                 ),
                 RaisedButton(
-                    color: Colors.indigo[500],
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0)),
-                    child: Text(
-                      'Update',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
+                  color: Colors.indigo[500],
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0)),
+                  child: Text(
+                    'Update',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      try {
+                        // Get image URL from firebase
+                        final ref =
+                            FirebaseStorage().ref().child(imageLocation);
+                        var imageString = await ref.getDownloadURL();
+
                         await postCollection.add({
                           'title': title,
                           'date': date,
-                          'image': image,
+                          'image': imageString,
                           'publisher': publisher,
                           'text': text
                         });
@@ -121,13 +108,47 @@ class _AddPostState extends State<AddPost> {
                             duration: Toast.LENGTH_SHORT,
                             backgroundColor: Colors.lightGreen);
                         Navigator.pop(context);
+                      } catch (e) {
+                        print(e.message);
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Text(e.message),
+                            );
+                          },
+                        );
                       }
-                    }),
+                    }
+                  },
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future getImage() async {
+    // Get image from gallery.
+    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    _uploadImageToFirebase(_image);
+  }
+
+  Future<void> _uploadImageToFirebase(File image) async {
+    try {
+      // Make random image name.
+      int randomNumber = Random().nextInt(100000);
+      imageLocation = 'images/image$randomNumber.jpg';
+
+      // Upload image to firebase.
+      final StorageReference storageReference =
+          FirebaseStorage().ref().child(imageLocation);
+      final StorageUploadTask uploadTask = storageReference.putFile(image);
+      await uploadTask.onComplete;
+    } catch (e) {
+      print(e.message);
+    }
   }
 }

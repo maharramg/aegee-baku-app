@@ -66,7 +66,6 @@ class MyDrawer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    CircleAvatar(),
                     StreamBuilder(
                       stream: DatabaseService(uid: user.uid).userData,
                       builder: (context, snapshot) {
@@ -76,9 +75,17 @@ class MyDrawer extends StatelessWidget {
                           );
                         }
                         UserData userData = snapshot.data;
-                        return Text(
-                          "${userData.firstName} ${userData.lastName}",
-                          style: TextStyle(fontSize: 20),
+                        return Column(
+                          children: <Widget>[
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(userData.avatar) ,
+                              radius: 30,
+                            ),
+                            Text(
+                              "${userData.firstName} ${userData.lastName}",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ],
                         );
                       },
                     )
