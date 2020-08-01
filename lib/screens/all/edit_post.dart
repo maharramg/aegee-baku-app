@@ -7,12 +7,19 @@ import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddPost extends StatefulWidget {
+class EditPost extends StatefulWidget {
+  final String postID;
+  final String title;
+  final String image;
+  final String text;
+
+  EditPost(this.postID, this.title, this.image, this.text);
+
   @override
-  _AddPostState createState() => _AddPostState();
+  _EditPostState createState() => _EditPostState();
 }
 
-class _AddPostState extends State<AddPost> {
+class _EditPostState extends State<EditPost> {
   final CollectionReference postCollection =
       Firestore.instance.collection('posts');
 
@@ -31,7 +38,7 @@ class _AddPostState extends State<AddPost> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Post'),
+        title: Text('Edit Post'),
       ),
       body: Container(
         child: Padding(
@@ -41,6 +48,7 @@ class _AddPostState extends State<AddPost> {
             child: Column(
               children: <Widget>[
                 TextFormField(
+                  initialValue: widget.title,
                   decoration: textInputDecoration.copyWith(
                     hintText: 'title',
                   ),
@@ -70,6 +78,7 @@ class _AddPostState extends State<AddPost> {
                   height: 20,
                 ),
                 TextFormField(
+                  initialValue: widget.text,
                   decoration: textInputDecoration.copyWith(
                     hintText: 'text',
                   ),
@@ -92,14 +101,15 @@ class _AddPostState extends State<AddPost> {
                     if (_formKey.currentState.validate()) {
                       try {
                         // Get image URL from firebase
-                        final ref =
-                            FirebaseStorage().ref().child(imageLocation);
+                        final ref = FirebaseStorage().ref().child(imageLocation);
                         var imageString = await ref.getDownloadURL();
 
                         // Set current date
                         setDate();
 
-                        await postCollection.add({
+                        await postCollection
+                            .document(widget.postID)
+                            .updateData({
                           'title': title,
                           'date': date,
                           'image': imageString,
@@ -110,7 +120,7 @@ class _AddPostState extends State<AddPost> {
                         Toast.show("Posted", context,
                             duration: Toast.LENGTH_SHORT,
                             backgroundColor: Colors.lightGreen);
-                        Navigator.pop(context);
+                        Navigator.popUntil(context, (route) => route.isFirst);
                       } catch (e) {
                         print(e.message);
                         showDialog(

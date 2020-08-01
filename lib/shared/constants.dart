@@ -11,3 +11,9 @@ const textInputDecoration = InputDecoration(
   hintStyle: TextStyle(color: Colors.grey),
   fillColor: Colors.white
 );
+
+class Variable{
+
+  static bool isAdmin;
+
+}

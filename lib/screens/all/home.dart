@@ -6,6 +6,7 @@ import 'package:aegeeapp/services/database.dart';
 import 'package:aegeeapp/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:aegeeapp/shared/constants.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -28,6 +29,8 @@ class _HomeState extends State<Home> {
             }
             UserData userData = snapshot.data;
             _isAdmin = userData.admin;
+            Variable.isAdmin = _isAdmin;
+
             return StreamProvider<List<Post>>.value(
               value: DatabaseService().posts,
               child: Scaffold(

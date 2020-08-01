@@ -117,6 +117,7 @@ class _ProfileState extends State<Profile> {
 
   Future getImage() async {
     // Get image from gallery.
+    // ignore: deprecated_member_use
     _image = await ImagePicker.pickImage(source: ImageSource.gallery);
     _uploadImageToFirebase(_image);
   }

@@ -1,4 +1,7 @@
+import 'package:aegeeapp/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'edit_post.dart';
 
 class PostScreen extends StatelessWidget {
   final String title;
@@ -8,6 +11,8 @@ class PostScreen extends StatelessWidget {
   final String text;
 
   PostScreen(this.title, this.date, this.image, this.publisher, this.text);
+
+  String postID;
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +39,34 @@ class PostScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(text),
-              )
+              ),
             ],
           ),
         ),
       ),
+      floatingActionButton: adminFeature(context),
     );
+  }
+
+  Widget adminFeature(BuildContext context) {
+    if (Variable.isAdmin == true) {
+      return FloatingActionButton(
+        child: Icon(Icons.edit),
+        onPressed: () async {
+          await Firestore.instance
+              .collection('posts')
+              .where("image", isEqualTo: image)
+              .getDocuments()
+              .then((value) => postID = value.documents[0].documentID);
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EditPost(postID, title, image, text)));
+        },
+      );
+    } else {
+      return Container();
+    }
   }
 }

@@ -1,3 +1,4 @@
+
 import 'package:aegeeapp/models/user.dart';
 import 'package:aegeeapp/screens/all/home.dart';
 import 'package:aegeeapp/screens/all/profile.dart';
@@ -77,10 +78,7 @@ class MyDrawer extends StatelessWidget {
                         UserData userData = snapshot.data;
                         return Column(
                           children: <Widget>[
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(userData.avatar) ,
-                              radius: 30,
-                            ),
+                            avatarUser(userData.avatar),
                             Text(
                               "${userData.firstName} ${userData.lastName}",
                               style: TextStyle(fontSize: 20),
@@ -121,4 +119,18 @@ class MyDrawer extends StatelessWidget {
       ),
     );
   }
+
+  Widget avatarUser(String avatar){
+    if(avatar != null){
+      return CircleAvatar(
+        backgroundImage: NetworkImage(avatar) ,
+        radius: 30,
+      );
+    }else{
+      return CircleAvatar(
+        backgroundColor: Colors.white12,
+      );
+    }
+  }
+
 }
