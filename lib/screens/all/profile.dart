@@ -7,6 +7,7 @@ import 'package:aegeeapp/shared/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image/network.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -100,7 +101,7 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Widget userAvatar(String _avatar){
+  userAvatar(String _avatar){
     if(_avatar == null){
       return CircleAvatar(
         backgroundColor: Colors.red,
@@ -109,7 +110,7 @@ class _ProfileState extends State<Profile> {
     }
     else{
       return CircleAvatar(
-        backgroundImage: NetworkImage(_avatar),
+        backgroundImage: NetworkImageWithRetry(_avatar),
         radius: 60,
       );
     }

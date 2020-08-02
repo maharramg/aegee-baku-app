@@ -48,6 +48,7 @@ class _HomeState extends State<Home> {
     if (_isAdmin == true) {
       return FloatingActionButton(
         child: Icon(Icons.add),
+        elevation: 8.0,
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => AddPost()));
