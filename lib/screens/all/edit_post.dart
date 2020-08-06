@@ -9,8 +9,10 @@ class EditPost extends StatefulWidget {
   final String image;
   final String text;
   final String date;
+  final String type;
 
-  EditPost(this.postID, this.title, this.image, this.text, this.date);
+  EditPost(
+      this.postID, this.title, this.image, this.text, this.date, this.type);
 
   @override
   _EditPostState createState() => _EditPostState();
@@ -24,6 +26,11 @@ class _EditPostState extends State<EditPost> {
 
   String title;
   String text;
+  String type;
+
+  String searchKey;
+
+  int _value;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +55,44 @@ class _EditPostState extends State<EditPost> {
                       : null,
                   onChanged: (val) {
                     title = val;
+                    searchKey = title.substring(0, 1).toLowerCase();
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                DropdownButton(
+                  value: _value,
+                  items: [
+                    DropdownMenuItem(
+                      child: Text("Seminar"),
+                      value: 1,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Webinar"),
+                      value: 2,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("International event"),
+                      value: 3,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Universities"),
+                      value: 4,
+                    ),
+                  ],
+                  onChanged: (int value) {
+                    setState(() {
+                      _value = value;
+                    });
+                    if (_value == 1)
+                      type = "seminar";
+                    else if (_value == 2)
+                      type = "webinar";
+                    else if (_value == 3)
+                      type = "international_event";
+                    else
+                      type = "universities";
                   },
                 ),
                 SizedBox(
@@ -61,6 +106,7 @@ class _EditPostState extends State<EditPost> {
                   validator: (val) => val.length < 1
                       ? 'Title must be at least 1 character'
                       : null,
+                  maxLines: null,
                   onChanged: (val) {
                     text = val;
                   },
@@ -79,16 +125,35 @@ class _EditPostState extends State<EditPost> {
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       try {
-                        if (title == null && text != null) {
+                        if (title == null && text != null && type != null) {
                           await postCollection
                               .document(widget.postID)
-                              .updateData(
-                                  {'title': widget.title, 'text': text});
-                        } else if (text == null && title != null) {
+                              .updateData({
+                            'title': widget.title,
+                            'text': text,
+                            'type': type
+                          });
+                        } else if (text == null &&
+                            title != null &&
+                            type != null) {
                           await postCollection
                               .document(widget.postID)
-                              .updateData(
-                                  {'title': title, 'text': widget.text});
+                              .updateData({
+                            'title': title,
+                            'text': widget.text,
+                            'type': type,
+                            'searchKey': searchKey
+                          });
+                        } else if (type == null &&
+                            text != null &&
+                            title != null) {
+                          await postCollection
+                              .document(widget.postID)
+                              .updateData({
+                            'title': title,
+                            'text': text,
+                            'type': widget.type
+                          });
                         } else if (text == null && title == null) {
                           await postCollection
                               .document(widget.postID)
@@ -97,7 +162,8 @@ class _EditPostState extends State<EditPost> {
                         } else {
                           await postCollection
                               .document(widget.postID)
-                              .updateData({'title': title, 'text': text});
+                              .updateData(
+                                  {'title': title, 'text': text, 'type': type});
                         }
 
                         Toast.show("Edited", context,

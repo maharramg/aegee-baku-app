@@ -24,8 +24,11 @@ class _AddPostState extends State<AddPost> {
   String title;
   String image;
   String date;
-  String publisher = "Admin";
+  String type;
   String text;
+
+  String searchKey;
+  int _value = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +52,40 @@ class _AddPostState extends State<AddPost> {
                       : null,
                   onChanged: (val) {
                     title = val;
+                    searchKey = title.substring(0, 1).toLowerCase();
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                DropdownButton(
+                  value: _value,
+                  items: [
+                    DropdownMenuItem(
+                      child: Text("Seminar"),
+                      value: 1,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Webinar"),
+                      value: 2,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("International event"),
+                      value: 3,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Universities"),
+                      value: 4,
+                    ),
+                  ],
+                  onChanged: (int value) {
+                    setState(() {
+                      _value = value;
+                    });
+                    if (_value == 1) type = "seminar";
+                    else if (_value == 2) type = "webinar";
+                    else if (_value == 3) type = "international_event";
+                    else type = "universities";
                   },
                 ),
                 SizedBox(
@@ -63,7 +100,7 @@ class _AddPostState extends State<AddPost> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () async {
-                    getImage();
+                    getAndUploadImage();
                   },
                 ),
                 SizedBox(
@@ -76,6 +113,7 @@ class _AddPostState extends State<AddPost> {
                   validator: (val) => val.length < 1
                       ? 'Title must be at least 1 character'
                       : null,
+                  maxLines: null,
                   onChanged: (val) {
                     text = val;
                   },
@@ -90,36 +128,45 @@ class _AddPostState extends State<AddPost> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
-                      try {
-                        // Get image URL from firebase
-                        final ref =
-                            FirebaseStorage().ref().child(imageLocation);
-                        var imageString = await ref.getDownloadURL();
+                      if (imageLocation != null) {
+                        try {
+                          // Get image URL from firebase
+                          final ref =
+                              FirebaseStorage().ref().child(imageLocation);
+                          var imageString = await ref.getDownloadURL();
 
-                        // Set current date
-                        setDate();
+                          // Set current date
+                          setDate();
 
-                        await postCollection.add({
-                          'title': title,
-                          'date': date,
-                          'image': imageString,
-                          'publisher': publisher,
-                          'text': text
-                        });
+                          await postCollection.add({
+                            'title': title,
+                            'date': date,
+                            'image': imageString,
+                            'type': type,
+                            'text': text,
+                            'searchKey': searchKey,
+                          });
 
-                        Toast.show("Posted", context,
-                            duration: Toast.LENGTH_SHORT,
-                            backgroundColor: Colors.lightGreen);
-                        Navigator.pop(context);
-                      } catch (e) {
-                        print(e.message);
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text(e.message),
-                            );
-                          },
+                          Toast.show("Posted", context,
+                              duration: Toast.LENGTH_SHORT,
+                              backgroundColor: Colors.lightGreen);
+                          Navigator.pop(context);
+                        } catch (e) {
+                          print(e.message);
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Text(e.message),
+                              );
+                            },
+                          );
+                        }
+                      } else {
+                        Toast.show(
+                          "Please upload an image !",
+                          context,
+                          duration: Toast.LENGTH_LONG,
                         );
                       }
                     }
@@ -139,15 +186,12 @@ class _AddPostState extends State<AddPost> {
     date = formattedDate;
   }
 
-  Future getImage() async {
-    // Get image from gallery.
-    // ignore: deprecated_member_use
-    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    _uploadImageToFirebase(_image);
-  }
-
-  Future<void> _uploadImageToFirebase(File image) async {
+  Future getAndUploadImage() async {
     try {
+      // Get image from gallery.
+      // ignore: deprecated_member_use
+      _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
       DateTime now = DateTime.now();
       String formattedDate = DateFormat('kk-mm-ss-EEE-d-MMM').format(now);
       imageLocation = 'images/image$formattedDate.png';
@@ -155,7 +199,7 @@ class _AddPostState extends State<AddPost> {
       // Upload image to firebase.
       final StorageReference storageReference =
           FirebaseStorage().ref().child(imageLocation);
-      final StorageUploadTask uploadTask = storageReference.putFile(image);
+      final StorageUploadTask uploadTask = storageReference.putFile(_image);
       await uploadTask.onComplete;
     } catch (e) {
       print(e.message);

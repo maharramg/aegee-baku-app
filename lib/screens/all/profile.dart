@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:aegeeapp/models/user.dart';
 import 'package:aegeeapp/services/database.dart';
@@ -7,9 +6,10 @@ import 'package:aegeeapp/shared/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image/network.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -17,9 +17,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   final CollectionReference userCollection =
-  Firestore.instance.collection('users');
+      Firestore.instance.collection('users');
 
   bool _isAdmin;
 
@@ -46,34 +45,40 @@ class _ProfileState extends State<Profile> {
                 userAvatar(userData.avatar),
                 SizedBox(height: 20),
                 RaisedButton(
+                  child: Text("Select an image"),
+                  onPressed: () async {
+                    getAndUploadImage();
+                  },
+                ),
+                RaisedButton(
                   child: Text("Upload image"),
                   onPressed: () async {
-                    try{
-                      getImage();
+                    if (imageLocation != null) {
+                      try {
+                        final ref =
+                            FirebaseStorage().ref().child(imageLocation);
+                        var imageString = await ref.getDownloadURL();
 
-                      final ref =
-                      FirebaseStorage().ref().child(imageLocation);
-                      var imageString = await ref.getDownloadURL();
-
-                      //UPDATE USER DATA
-                      await userCollection.document(user.uid).setData({
-                        'first_name': userData.firstName,
-                        'last_name': userData.lastName,
-                        'email': userData.email,
-                        'password': userData.password,
-                        'admin': userData.admin,
-                        'avatar': imageString
-                      });
-
-                    }catch(e){
-                      print(e.message);
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text(e.message),
-                          );
-                        },
+                        //UPDATE USER DATA
+                        await userCollection
+                            .document(user.uid)
+                            .updateData({'avatar': imageString});
+                      } catch (e) {
+                        print(e.message);
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Text(e.message),
+                            );
+                          },
+                        );
+                      }
+                    } else {
+                      Toast.show(
+                        "Please select an image first !",
+                        context,
+                        duration: Toast.LENGTH_LONG,
                       );
                     }
                   },
@@ -101,41 +106,34 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  userAvatar(String _avatar){
-    if(_avatar == null){
+  userAvatar(String _avatar) {
+    if (_avatar == null) {
       return CircleAvatar(
         backgroundColor: Colors.red,
         radius: 60,
       );
-    }
-    else{
+    } else {
       return CircleAvatar(
-        backgroundImage: NetworkImageWithRetry(_avatar),
+        backgroundImage: NetworkImage(_avatar),
         radius: 60,
       );
     }
   }
 
-  Future getImage() async {
+  Future getAndUploadImage() async {
     // Get image from gallery.
     // ignore: deprecated_member_use
     _image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    _uploadImageToFirebase(_image);
-  }
 
-  Future<void> _uploadImageToFirebase(File image) async {
-    try {
-      // Make random image name.
-      int randomNumber = Random().nextInt(100000);
-      imageLocation = 'avatars/avatar$randomNumber.jpg';
+    // Make random image name.
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('kk-mm-ss-EEE-d-MMM').format(now);
+    imageLocation = 'avatars/avatar$formattedDate.jpg';
 
-      // Upload image to firebase.
-      final StorageReference storageReference =
-      FirebaseStorage().ref().child(imageLocation);
-      final StorageUploadTask uploadTask = storageReference.putFile(image);
-      await uploadTask.onComplete;
-    } catch (e) {
-      print(e.message);
-    }
+    // Upload image to firebase.
+    final StorageReference storageReference =
+        FirebaseStorage().ref().child(imageLocation);
+    final StorageUploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
   }
 }

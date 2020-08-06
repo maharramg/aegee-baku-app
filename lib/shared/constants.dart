@@ -15,5 +15,5 @@ const textInputDecoration = InputDecoration(
 class Variable{
 
   static bool isAdmin;
-
+  static bool isHome = true;
 }

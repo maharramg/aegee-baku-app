@@ -18,7 +18,7 @@ class PostTile extends StatelessWidget {
                     post.title,
                     post.date.toString(),
                     post.image,
-                    post.publisher,
+                    post.type,
                     post.text)));
       },
       child: Container(
@@ -48,7 +48,7 @@ class PostTile extends StatelessWidget {
             children: <Widget>[
               Text(post.title,
                   style: TextStyle(color: Colors.white, fontSize: 20)),
-              Text(post.publisher,
+              Text(post.type,
                   style: TextStyle(color: Colors.white, fontSize: 10)),
               Text(post.date.toString(),
                   style: TextStyle(color: Colors.white, fontSize: 10)),

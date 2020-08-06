@@ -14,6 +14,12 @@ class DatabaseService {
   final CollectionReference postCollection =
       Firestore.instance.collection('posts');
 
+  final Query postSeminarCollection =
+  Firestore.instance.collection('posts').where('type', isEqualTo: 'seminar');
+
+  final Query postUniversitiesCollection =
+  Firestore.instance.collection('posts').where('type', isEqualTo: 'universities');
+
   Future updateUserData(
       String firstName, String lastName, String email, String password) async {
     return await userCollection.document(uid).setData({
@@ -44,20 +50,60 @@ class DatabaseService {
     return userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   }
 
-  List<Post> _postListFromSnapshot(QuerySnapshot snapshot) {
+  
+  // get all posts 
+  List<Post> _allPostsListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return Post(
         doc.data['title'] ?? '',
         doc.data['date'] ?? '',
         doc.data['image'],
-        doc.data['publisher'] ?? '',
+        doc.data['type'] ?? '',
         doc.data['text'] ?? '',
       );
     }).toList();
   }
 
-  // get posts stream
+  // get all posts stream
   Stream<List<Post>> get posts {
-    return postCollection.snapshots().map(_postListFromSnapshot);
+    return postCollection.snapshots().map(_allPostsListFromSnapshot);
   }
+
+  // get seminar posts 
+  List<Post> _seminarPostsListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return Post(
+        doc.data['title'] ?? '',
+        doc.data['date'] ?? '',
+        doc.data['image'],
+        doc.data['type'] ?? '',
+        doc.data['text'] ?? '',
+      );
+    }).toList();
+  }
+
+  // get seminar posts stream
+  Stream<List<Post>> get postsSeminar {
+    return postSeminarCollection.snapshots().map(_seminarPostsListFromSnapshot);
+  }
+
+  // get universities posts
+  List<Post> _universitiesPostsListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return Post(
+        doc.data['title'] ?? '',
+        doc.data['date'] ?? '',
+        doc.data['image'],
+        doc.data['type'] ?? '',
+        doc.data['text'] ?? '',
+      );
+    }).toList();
+  }
+
+  // get universities posts stream
+  Stream<List<Post>> get postsUniversities {
+    return postUniversitiesCollection.snapshots().map(_universitiesPostsListFromSnapshot);
+  }
+  
+  
 }

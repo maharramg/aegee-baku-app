@@ -10,10 +10,10 @@ class PostScreen extends StatelessWidget {
   final String title;
   final String date;
   final String image;
-  final String publisher;
+  final String type;
   final String text;
 
-  PostScreen(this.title, this.date, this.image, this.publisher, this.text);
+  PostScreen(this.title, this.date, this.image, this.type, this.text);
 
   String postID;
 
@@ -84,7 +84,7 @@ class PostScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            EditPost(postID, title, image, text, date)));
+                            EditPost(postID, title, image, text, date, type)));
               }),
           SpeedDialChild(
               child: Icon(Icons.delete_outline),
