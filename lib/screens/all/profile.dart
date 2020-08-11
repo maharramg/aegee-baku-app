@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:aegeeapp/models/user.dart';
 import 'package:aegeeapp/services/database.dart';
+import 'package:aegeeapp/shared/constants.dart';
 import 'package:aegeeapp/shared/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -38,6 +39,7 @@ class _ProfileState extends State<Profile> {
         UserData userData = snapshot.data;
         _isAdmin = userData.admin;
         return Container(
+          color: ColorsGlobal.profile,
           child: Center(
             child: Column(
               children: <Widget>[
@@ -109,7 +111,7 @@ class _ProfileState extends State<Profile> {
   userAvatar(String _avatar) {
     if (_avatar == null) {
       return CircleAvatar(
-        backgroundColor: Colors.red,
+        backgroundImage: NetworkImage(Variable.noProfilePicture),
         radius: 60,
       );
     } else {

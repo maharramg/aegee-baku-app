@@ -1,13 +1,12 @@
 import 'package:aegeeapp/models/post.dart';
 import 'package:aegeeapp/models/user.dart';
-import 'package:aegeeapp/screens/all/post_list.dart';
+import 'package:aegeeapp/screens/all/post/add_post.dart';
+import 'package:aegeeapp/screens/all/post/post_list.dart';
 import 'package:aegeeapp/services/database.dart';
 import 'package:aegeeapp/shared/constants.dart';
 import 'package:aegeeapp/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'add_post.dart';
 
 class All extends StatefulWidget {
   @override
@@ -22,6 +21,8 @@ class _AllState extends State<All> {
     User user = Provider.of<User>(context);
 
     return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
       child: StreamBuilder(
         stream: DatabaseService(uid: user.uid).userData,
         builder: (context, snapshot) {
@@ -36,6 +37,7 @@ class _AllState extends State<All> {
             value: DatabaseService().posts,
             child: Scaffold(
               body: Container(
+                color: ColorsGlobal.home,
                 child: PostList(),
               ),
               floatingActionButton: adminFeature(),

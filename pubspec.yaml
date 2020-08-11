@@ -41,6 +41,8 @@ dependencies:
   image_cropper: ^1.2.3
   intl: ^0.16.1
   flutter_speed_dial: ^1.2.5
+  curved_navigation_bar: ^0.3.3
+  tab_indicator_styler: ^1.0.0
 
 
 dev_dependencies:

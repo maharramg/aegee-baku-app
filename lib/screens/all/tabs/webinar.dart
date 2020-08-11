@@ -1,20 +1,20 @@
 import 'package:aegeeapp/models/post.dart';
 import 'package:aegeeapp/models/user.dart';
-import 'package:aegeeapp/screens/all/post_list.dart';
+import 'package:aegeeapp/screens/all/post/add_post.dart';
+import 'package:aegeeapp/screens/all/post/post_list.dart';
 import 'package:aegeeapp/services/database.dart';
 import 'package:aegeeapp/shared/constants.dart';
 import 'package:aegeeapp/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'add_post.dart';
 
-class Seminar extends StatefulWidget {
+class Webinar extends StatefulWidget {
   @override
-  _SeminarState createState() => _SeminarState();
+  _WebinarState createState() => _WebinarState();
 }
 
-class _SeminarState extends State<Seminar> {
+class _WebinarState extends State<Webinar> {
   bool _isAdmin;
 
   @override
@@ -33,7 +33,7 @@ class _SeminarState extends State<Seminar> {
           Variable.isAdmin = _isAdmin;
 
           return StreamProvider<List<Post>>.value(
-            value: DatabaseService().postsSeminar,
+            value: DatabaseService().postsWebinar,
             child: Scaffold(
               body: Container(
                 child: PostList(),

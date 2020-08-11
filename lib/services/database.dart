@@ -14,11 +14,17 @@ class DatabaseService {
   final CollectionReference postCollection =
       Firestore.instance.collection('posts');
 
-  final Query postSeminarCollection =
-  Firestore.instance.collection('posts').where('type', isEqualTo: 'seminar');
+  final Query postSeminarCollection = Firestore.instance
+      .collection('posts')
+      .where('type', isEqualTo: 'seminar');
 
-  final Query postUniversitiesCollection =
-  Firestore.instance.collection('posts').where('type', isEqualTo: 'universities');
+  final Query postWebinarCollection = Firestore.instance
+      .collection('posts')
+      .where('type', isEqualTo: 'webinar');
+
+  final Query postUniversitiesCollection = Firestore.instance
+      .collection('posts')
+      .where('type', isEqualTo: 'universities');
 
   Future updateUserData(
       String firstName, String lastName, String email, String password) async {
@@ -50,8 +56,7 @@ class DatabaseService {
     return userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   }
 
-  
-  // get all posts 
+  // get all posts
   List<Post> _allPostsListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return Post(
@@ -69,8 +74,26 @@ class DatabaseService {
     return postCollection.snapshots().map(_allPostsListFromSnapshot);
   }
 
-  // get seminar posts 
+  // get seminar posts
   List<Post> _seminarPostsListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return Post(
+        doc.data['title'] ?? '',
+        doc.data['date'] ?? '',
+        doc.data['image'],
+        doc.data['type'] ?? '',
+        doc.data['text'] ?? '',
+      );
+    }).toList();
+  }
+
+  // get webinar posts stream
+  Stream<List<Post>> get postsWebinar {
+    return postWebinarCollection.snapshots().map(_webinarPostsListFromSnapshot);
+  }
+
+  // get webinar posts
+  List<Post> _webinarPostsListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return Post(
         doc.data['title'] ?? '',
@@ -102,8 +125,8 @@ class DatabaseService {
 
   // get universities posts stream
   Stream<List<Post>> get postsUniversities {
-    return postUniversitiesCollection.snapshots().map(_universitiesPostsListFromSnapshot);
+    return postUniversitiesCollection
+        .snapshots()
+        .map(_universitiesPostsListFromSnapshot);
   }
-  
-  
 }

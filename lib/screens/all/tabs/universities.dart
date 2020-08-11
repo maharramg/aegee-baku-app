@@ -1,13 +1,13 @@
 import 'package:aegeeapp/models/post.dart';
 import 'package:aegeeapp/models/user.dart';
-import 'package:aegeeapp/screens/all/post_list.dart';
+import 'package:aegeeapp/screens/all/post/post_list.dart';
 import 'package:aegeeapp/services/database.dart';
 import 'package:aegeeapp/shared/constants.dart';
 import 'package:aegeeapp/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'add_post.dart';
+import '../post/add_post.dart';
 
 class Universities extends StatefulWidget {
   @override

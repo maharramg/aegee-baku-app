@@ -1,5 +1,5 @@
 import 'package:aegeeapp/models/post.dart';
-import 'package:aegeeapp/screens/all/post_tile.dart';
+import 'package:aegeeapp/screens/all/post/post_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

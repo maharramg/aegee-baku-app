@@ -2,7 +2,9 @@ import 'package:aegeeapp/models/user.dart';
 import 'package:aegeeapp/services/auth.dart';
 import 'package:aegeeapp/services/database.dart';
 import 'package:aegeeapp/shared/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -39,8 +41,12 @@ class MyDrawer extends StatelessWidget {
                           }
                           UserData userData = snapshot.data;
                           return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              avatarUser(userData.avatar),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: avatarUser(userData.avatar),
+                              ),
                               Text(
                                 "${userData.firstName} ${userData.lastName}",
                                 style: TextStyle(fontSize: 20),
@@ -48,7 +54,7 @@ class MyDrawer extends StatelessWidget {
                             ],
                           );
                         },
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -58,7 +64,8 @@ class MyDrawer extends StatelessWidget {
                 title: Text("Home"),
                 onTap: () {
                   Variable.isHome = true;
-                  onTap(context, 0);
+                  Variable.homeIconColor = Colors.black;
+                  onTap(context, 2);
                 },
               ),
               ListTile(
@@ -66,7 +73,8 @@ class MyDrawer extends StatelessWidget {
                 title: Text("Profile"),
                 onTap: () {
                   Variable.isHome = false;
-                  onTap(context, 1);
+                  Variable.homeIconColor = Colors.white;
+                  onTap(context, 0);
                 },
               ),
               ListTile(
@@ -74,7 +82,8 @@ class MyDrawer extends StatelessWidget {
                 title: Text("Settings"),
                 onTap: () {
                   Variable.isHome = false;
-                  onTap(context, 2);
+                  Variable.homeIconColor = Colors.white;
+                  onTap(context, 1);
                 },
               ),
               Divider(height: 10),
@@ -84,7 +93,7 @@ class MyDrawer extends StatelessWidget {
                 onTap: () async {
                   await _auth.signOut();
                 },
-              )
+              ),
             ],
           ),
         ),
@@ -100,7 +109,8 @@ class MyDrawer extends StatelessWidget {
       );
     } else {
       return CircleAvatar(
-        backgroundColor: Colors.white12,
+        backgroundImage: NetworkImage(Variable.noProfilePicture),
+        radius: 30,
       );
     }
   }

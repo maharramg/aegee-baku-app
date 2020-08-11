@@ -1,5 +1,5 @@
 import 'package:aegeeapp/models/post.dart';
-import 'package:aegeeapp/screens/all/post_screen.dart';
+import 'package:aegeeapp/screens/all/post/post_screen.dart';
 import 'package:flutter/material.dart';
 
 class PostTile extends StatelessWidget {

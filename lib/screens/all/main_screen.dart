@@ -1,7 +1,10 @@
+import 'package:aegeeapp/screens/all/discount.dart';
 import 'package:aegeeapp/screens/all/drawer.dart';
 import 'package:aegeeapp/screens/all/home.dart';
 import 'package:aegeeapp/screens/all/profile.dart';
 import 'package:aegeeapp/screens/all/settings.dart';
+import 'package:aegeeapp/shared/constants.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -10,9 +13,15 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int index = 0;
-  List<Widget> list = [Home(), Profile(), Settings()];
-  List<String> titles = ["AEGEE Baku", "Profile", "Settings"];
+  int _index = 2;
+  List<Widget> list = [Profile(), Settings(), Home(), Discount()];
+  List<String> titles = ["Profile", "Settings", "AEGEE Baku", "Discount"];
+  List<Color> colors = [
+    ColorsGlobal.profile,
+    ColorsGlobal.settings,
+    ColorsGlobal.home,
+    ColorsGlobal.discount
+  ];
   String appBarTitle = "AEGEE Baku";
 
   @override
@@ -22,16 +31,43 @@ class _MainScreenState extends State<MainScreen> {
       home: Scaffold(
         appBar: AppBar(
           title: Text(appBarTitle),
-          elevation: 0,
           centerTitle: true,
+          elevation: 0,
         ),
-        body: list[index],
+        body: list[_index],
         drawer: MyDrawer(
           onTap: (context, i) {
             setState(() {
-              index = i;
-              appBarTitle = titles[index];
+              _index = i;
+              appBarTitle = titles[_index];
               Navigator.pop(context, i);
+            });
+          },
+        ),
+        bottomNavigationBar: CurvedNavigationBar(
+          color: Colors.black,
+          index: _index,
+          height: 60,
+          buttonBackgroundColor: _index == 2 ? Colors.white : null,
+          backgroundColor: _index == 2 ? Colors.black : colors[_index],
+          animationCurve: Curves.decelerate,
+          animationDuration: Duration(milliseconds: 500),
+          items: [
+            Icon(Icons.person, size: 20, color: Colors.white),
+            Icon(Icons.settings, size: 20, color: Colors.white),
+            Icon(Icons.home, size: 40, color: Variable.homeIconColor),
+            Icon(Icons.whatshot, size: 20, color: Colors.white),
+            Icon(Icons.search, size: 20, color: Colors.white),
+          ],
+          onTap: (index) {
+            setState(() {
+              if (index == 2) {
+                Variable.homeIconColor = Colors.black;
+              } else {
+                Variable.homeIconColor = Colors.white;
+              }
+              _index = index;
+              appBarTitle = titles[_index];
             });
           },
         ),

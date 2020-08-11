@@ -82,10 +82,14 @@ class _AddPostState extends State<AddPost> {
                     setState(() {
                       _value = value;
                     });
-                    if (_value == 1) type = "seminar";
-                    else if (_value == 2) type = "webinar";
-                    else if (_value == 3) type = "international_event";
-                    else type = "universities";
+                    if (_value == 1)
+                      type = "seminar";
+                    else if (_value == 2)
+                      type = "webinar";
+                    else if (_value == 3)
+                      type = "international_event";
+                    else
+                      type = "universities";
                   },
                 ),
                 SizedBox(
