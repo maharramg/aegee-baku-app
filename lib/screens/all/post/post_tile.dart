@@ -1,5 +1,6 @@
 import 'package:aegeeapp/models/post.dart';
 import 'package:aegeeapp/screens/all/post/post_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PostTile extends StatelessWidget {
@@ -14,21 +15,19 @@ class PostTile extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => PostScreen(
-                    post.title,
-                    post.date.toString(),
-                    post.image,
-                    post.type,
-                    post.text)));
+                builder: (context) => PostScreen(post.title,
+                    post.date.toString(), post.image, post.type, post.text)));
       },
       child: Container(
         height: 200,
-        margin: EdgeInsets.all(20),
         width: double.infinity,
+        margin: EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          image:
-              DecorationImage(image: NetworkImage(post.image), fit: BoxFit.cover),
+          image: DecorationImage(
+            image: NetworkImage(post.image),
+            fit: BoxFit.cover,
+          ),
         ),
         child: Container(
           padding: EdgeInsets.all(18),
@@ -42,20 +41,50 @@ class PostTile extends StatelessWidget {
               ],
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(post.title,
-                  style: TextStyle(color: Colors.white, fontSize: 20)),
-              Text(post.type,
-                  style: TextStyle(color: Colors.white, fontSize: 10)),
-              Text(post.date.toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 10)),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    post.title,
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(3.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: getColor(post.type),
+                    ),
+                    child: Text(
+                      post.type,
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),
       ),
     );
+  }
+
+  Color getColor(String type) {
+    if (type == "seminar") {
+      return Colors.orange;
+    } else if (type == "webinar") {
+      return Colors.red;
+    } else if (type == "universities") {
+      return Colors.greenAccent;
+    } else {
+      return Colors.blueGrey;
+    }
   }
 }

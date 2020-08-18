@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AddPost extends StatefulWidget {
   @override
@@ -18,8 +19,8 @@ class _AddPostState extends State<AddPost> {
 
   final _formKey = GlobalKey<FormState>();
 
-  File _image;
   String imageLocation;
+  String imageUrl;
 
   String title;
   String image;
@@ -95,6 +96,12 @@ class _AddPostState extends State<AddPost> {
                 SizedBox(
                   height: 20,
                 ),
+                (imageUrl != null)
+                    ? Image.network(imageUrl)
+                    : Placeholder(
+                        fallbackHeight: 100,
+                        fallbackWidth: double.infinity,
+                      ),
                 RaisedButton(
                   color: Colors.indigo[500],
                   shape: RoundedRectangleBorder(
@@ -103,7 +110,7 @@ class _AddPostState extends State<AddPost> {
                     'Upload an image',
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () async {
+                  onPressed: () {
                     getAndUploadImage();
                   },
                 ),
@@ -132,20 +139,15 @@ class _AddPostState extends State<AddPost> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
-                      if (imageLocation != null) {
+                      if (imageUrl != null) {
                         try {
-                          // Get image URL from firebase
-                          final ref =
-                              FirebaseStorage().ref().child(imageLocation);
-                          var imageString = await ref.getDownloadURL();
-
                           // Set current date
                           setDate();
 
                           await postCollection.add({
                             'title': title,
                             'date': date,
-                            'image': imageString,
+                            'image': imageUrl,
                             'type': type,
                             'text': text,
                             'searchKey': searchKey,
@@ -167,11 +169,9 @@ class _AddPostState extends State<AddPost> {
                           );
                         }
                       } else {
-                        Toast.show(
-                          "Please upload an image !",
-                          context,
-                          duration: Toast.LENGTH_LONG,
-                        );
+                        Toast.show("Please upload an image !", context,
+                            duration: Toast.LENGTH_LONG,
+                            backgroundColor: Colors.red);
                       }
                     }
                   },
@@ -186,25 +186,51 @@ class _AddPostState extends State<AddPost> {
 
   void setDate() {
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('kk:mm \n EEE-d-MMM').format(now);
+    String formattedDate = DateFormat('kk:mm\nEEE-d-MMM').format(now);
     date = formattedDate;
   }
 
-  Future getAndUploadImage() async {
+  getAndUploadImage() async {
     try {
-      // Get image from gallery.
-      // ignore: deprecated_member_use
-      _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+      final _storage = FirebaseStorage.instance;
+      final _picker = ImagePicker();
+      PickedFile image;
 
-      DateTime now = DateTime.now();
-      String formattedDate = DateFormat('kk-mm-ss-EEE-d-MMM').format(now);
-      imageLocation = 'images/image$formattedDate.png';
+      // Check Permission
+      await Permission.photos.request();
 
-      // Upload image to firebase.
-      final StorageReference storageReference =
-          FirebaseStorage().ref().child(imageLocation);
-      final StorageUploadTask uploadTask = storageReference.putFile(_image);
-      await uploadTask.onComplete;
+      var permissionStatus = Permission.photos.status;
+
+      bool isGranted = await permissionStatus.isGranted;
+
+      if (isGranted) {
+        // Select image
+        image = await _picker.getImage(source: ImageSource.gallery);
+        var file = File(image.path);
+
+        if (image != null) {
+          // Upload to firebase
+          DateTime now = DateTime.now();
+          String formattedDate = DateFormat('kk-mm-ss-EEE-d-MMM').format(now);
+          imageLocation = 'images/image$formattedDate.png';
+
+          var snapshot = await _storage
+              .ref()
+              .child(imageLocation)
+              .putFile(file)
+              .onComplete;
+
+          var downloadUrl = await snapshot.ref.getDownloadURL();
+
+          setState(() {
+            imageUrl = downloadUrl;
+          });
+        } else {
+          print("No path received");
+        }
+      } else {
+        print("Grant permission and try again");
+      }
     } catch (e) {
       print(e.message);
     }

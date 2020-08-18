@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
@@ -23,8 +24,8 @@ class _ProfileState extends State<Profile> {
 
   bool _isAdmin;
 
-  File _image;
   String imageLocation;
+  String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -47,24 +48,16 @@ class _ProfileState extends State<Profile> {
                 userAvatar(userData.avatar),
                 SizedBox(height: 20),
                 RaisedButton(
-                  child: Text("Select an image"),
-                  onPressed: () async {
-                    getAndUploadImage();
-                  },
-                ),
-                RaisedButton(
                   child: Text("Upload image"),
                   onPressed: () async {
-                    if (imageLocation != null) {
-                      try {
-                        final ref =
-                            FirebaseStorage().ref().child(imageLocation);
-                        var imageString = await ref.getDownloadURL();
+                    await getAndUploadImage();
 
+                    if (imageUrl != null) {
+                      try {
                         //UPDATE USER DATA
                         await userCollection
                             .document(user.uid)
-                            .updateData({'avatar': imageString});
+                            .updateData({'avatar': imageUrl});
                       } catch (e) {
                         print(e.message);
                         showDialog(
@@ -122,20 +115,49 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Future getAndUploadImage() async {
-    // Get image from gallery.
-    // ignore: deprecated_member_use
-    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  getAndUploadImage() async {
+    try {
+      final _storage = FirebaseStorage.instance;
+      final _picker = ImagePicker();
+      PickedFile image;
 
-    // Make random image name.
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('kk-mm-ss-EEE-d-MMM').format(now);
-    imageLocation = 'avatars/avatar$formattedDate.jpg';
+      // Check Permission
+      await Permission.photos.request();
 
-    // Upload image to firebase.
-    final StorageReference storageReference =
-        FirebaseStorage().ref().child(imageLocation);
-    final StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
+      var permissionStatus = Permission.photos.status;
+
+      bool isGranted = await permissionStatus.isGranted;
+
+      if (isGranted) {
+        // Select image
+        image = await _picker.getImage(source: ImageSource.gallery);
+        var file = File(image.path);
+
+        if (image != null) {
+          // Upload to firebase
+          DateTime now = DateTime.now();
+          String formattedDate = DateFormat('kk-mm-ss-EEE-d-MMM').format(now);
+          imageLocation = 'avatar/avatar$formattedDate.png';
+
+          var snapshot = await _storage
+              .ref()
+              .child(imageLocation)
+              .putFile(file)
+              .onComplete;
+
+          var downloadUrl = await snapshot.ref.getDownloadURL();
+
+          setState(() {
+            imageUrl = downloadUrl;
+          });
+        } else {
+          print("No path received");
+        }
+      } else {
+        print("Grant permission and try again");
+      }
+    } catch (e) {
+      print(e.message);
+    }
   }
 }

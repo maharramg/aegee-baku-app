@@ -39,11 +39,11 @@ dependencies:
   flutter_image: ^3.0.0
   image_picker: ^0.6.7+4
   image_cropper: ^1.2.3
+  permission_handler: ^5.0.1+1
   intl: ^0.16.1
   flutter_speed_dial: ^1.2.5
   curved_navigation_bar: ^0.3.3
   tab_indicator_styler: ^1.0.0
-
 
 dev_dependencies:
   flutter_test:
@@ -62,8 +62,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/
-     - assets/posts/
+    - assets/
+    - assets/posts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
