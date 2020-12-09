@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aegeeapp/models/user.dart';
+import 'package:aegeeapp/services/auth.dart';
 import 'package:aegeeapp/services/database.dart';
 import 'package:aegeeapp/shared/constants.dart';
 import 'package:aegeeapp/shared/loading.dart';
@@ -19,8 +20,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  final CollectionReference userCollection =
-      Firestore.instance.collection('users');
+  final CollectionReference userCollection = Firestore.instance.collection('users');
+
+  final AuthService _auth = AuthService();
 
   bool _isAdmin;
 
@@ -44,9 +46,9 @@ class _ProfileState extends State<Profile> {
           child: Center(
             child: Column(
               children: <Widget>[
-                SizedBox(height: 20),
+                SizedBox(height: Window.height(context, 20)),
                 userAvatar(userData.avatar),
-                SizedBox(height: 20),
+                SizedBox(height: Window.height(context, 20)),
                 RaisedButton(
                   child: Text("Upload image"),
                   onPressed: () async {
@@ -55,9 +57,7 @@ class _ProfileState extends State<Profile> {
                     if (imageUrl != null) {
                       try {
                         //UPDATE USER DATA
-                        await userCollection
-                            .document(user.uid)
-                            .updateData({'avatar': imageUrl});
+                        await userCollection.document(user.uid).updateData({'avatar': imageUrl});
                       } catch (e) {
                         print(e.message);
                         showDialog(
@@ -78,13 +78,20 @@ class _ProfileState extends State<Profile> {
                     }
                   },
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: Window.height(context, 20)),
                 Text(
                   "${userData.firstName} ${userData.lastName}",
                   style: TextStyle(fontSize: 20),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: Window.height(context, 20)),
                 adminFeature(),
+                SizedBox(height: Window.height(context, 20)),
+                RaisedButton(
+                  child: Text("Log out"),
+                  onPressed: () async {
+                    await _auth.signOut();
+                  },
+                )
               ],
             ),
           ),
@@ -105,12 +112,11 @@ class _ProfileState extends State<Profile> {
     if (_avatar == null) {
       return CircleAvatar(
         backgroundImage: NetworkImage(Variable.noProfilePicture),
-        radius: 60,
       );
     } else {
       return CircleAvatar(
         backgroundImage: NetworkImage(_avatar),
-        radius: 60,
+        radius: Window.height(context, 60),
       );
     }
   }
@@ -139,11 +145,7 @@ class _ProfileState extends State<Profile> {
           String formattedDate = DateFormat('kk-mm-ss-EEE-d-MMM').format(now);
           imageLocation = 'avatar/avatar$formattedDate.png';
 
-          var snapshot = await _storage
-              .ref()
-              .child(imageLocation)
-              .putFile(file)
-              .onComplete;
+          var snapshot = await _storage.ref().child(imageLocation).putFile(file).onComplete;
 
           var downloadUrl = await snapshot.ref.getDownloadURL();
 

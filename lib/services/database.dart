@@ -8,34 +8,20 @@ class DatabaseService {
   DatabaseService({this.uid});
 
   //collection reference
-  final CollectionReference userCollection =
-      Firestore.instance.collection('users');
+  final CollectionReference userCollection = Firestore.instance.collection('users');
 
-  final CollectionReference postCollection =
-      Firestore.instance.collection('posts');
+  final CollectionReference postCollection = Firestore.instance.collection('posts');
 
-  final Query postSeminarCollection = Firestore.instance
-      .collection('posts')
-      .where('type', isEqualTo: 'seminar');
+  final Query postSeminarCollection = Firestore.instance.collection('posts').where('type', isEqualTo: 'seminar');
 
-  final Query postWebinarCollection = Firestore.instance
-      .collection('posts')
-      .where('type', isEqualTo: 'webinar');
+  final Query postWebinarCollection = Firestore.instance.collection('posts').where('type', isEqualTo: 'webinar');
 
-  final Query postUniversitiesCollection = Firestore.instance
-      .collection('posts')
-      .where('type', isEqualTo: 'universities');
+  final Query postUniversitiesCollection = Firestore.instance.collection('posts').where('type', isEqualTo: 'universities');
 
-  Future updateUserData(
-      String firstName, String lastName, String email, String password) async {
-    return await userCollection.document(uid).setData({
-      'first_name': firstName,
-      'last_name': lastName,
-      'email': email,
-      'password': password,
-      'admin': false,
-      'avatar': null
-    });
+  final Query postInternationalEventsCollection = Firestore.instance.collection('posts').where('type', isEqualTo: 'international_event');
+
+  Future updateUserData(String firstName, String lastName, String email, String password) async {
+    return await userCollection.document(uid).setData({'first_name': firstName, 'last_name': lastName, 'email': email, 'password': password, 'admin': false, 'avatar': null});
   }
 
   // user data from snapshots
@@ -125,8 +111,24 @@ class DatabaseService {
 
   // get universities posts stream
   Stream<List<Post>> get postsUniversities {
-    return postUniversitiesCollection
-        .snapshots()
-        .map(_universitiesPostsListFromSnapshot);
+    return postUniversitiesCollection.snapshots().map(_universitiesPostsListFromSnapshot);
+  }
+
+  // get international events posts
+  List<Post> _internationalEventsPostsListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return Post(
+        doc.data['title'] ?? '',
+        doc.data['date'] ?? '',
+        doc.data['image'],
+        doc.data['type'] ?? '',
+        doc.data['text'] ?? '',
+      );
+    }).toList();
+  }
+
+  // get universities posts stream
+  Stream<List<Post>> get postsInternationalEvents {
+    return postInternationalEventsCollection.snapshots().map(_internationalEventsPostsListFromSnapshot);
   }
 }

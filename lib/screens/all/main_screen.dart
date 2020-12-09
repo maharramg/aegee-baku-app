@@ -1,5 +1,4 @@
 import 'package:aegeeapp/screens/all/discount.dart';
-import 'package:aegeeapp/screens/all/drawer.dart';
 import 'package:aegeeapp/screens/all/home.dart';
 import 'package:aegeeapp/screens/all/profile.dart';
 import 'package:aegeeapp/screens/all/settings.dart';
@@ -16,12 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   int _index = 2;
   List<Widget> list = [Profile(), Settings(), Home(), Discount()];
   List<String> titles = ["Profile", "Settings", "AEGEE Baku", "Discount"];
-  List<Color> colors = [
-    ColorsGlobal.profile,
-    ColorsGlobal.settings,
-    ColorsGlobal.home,
-    ColorsGlobal.discount
-  ];
+  List<Color> colors = [ColorsGlobal.profile, ColorsGlobal.settings, ColorsGlobal.home, ColorsGlobal.discount];
   String appBarTitle = "AEGEE Baku";
 
   @override
@@ -33,31 +27,23 @@ class _MainScreenState extends State<MainScreen> {
           title: Text(appBarTitle),
           centerTitle: true,
           elevation: 0,
+          backgroundColor: Colors.black,
         ),
         body: list[_index],
-        drawer: MyDrawer(
-          onTap: (context, i) {
-            setState(() {
-              _index = i;
-              appBarTitle = titles[_index];
-              Navigator.pop(context, i);
-            });
-          },
-        ),
         bottomNavigationBar: CurvedNavigationBar(
           color: Colors.black,
           index: _index,
-          height: 60,
+          height: Window.height(context, 60),
           buttonBackgroundColor: _index == 2 ? Colors.white : null,
           backgroundColor: _index == 2 ? Colors.black : colors[_index],
           animationCurve: Curves.decelerate,
           animationDuration: Duration(milliseconds: 500),
           items: [
-            Icon(Icons.person, size: 20, color: Colors.white),
-            Icon(Icons.settings, size: 20, color: Colors.white),
-            Icon(Icons.home, size: 40, color: Variable.homeIconColor),
-            Icon(Icons.whatshot, size: 20, color: Colors.white),
-            Icon(Icons.search, size: 20, color: Colors.white),
+            Icon(Icons.person, size: Window.height(context, 20), color: Colors.white),
+            Icon(Icons.settings, size: Window.height(context, 20), color: Colors.white),
+            Icon(Icons.home, size: Window.height(context, 40), color: Variable.homeIconColor),
+            Icon(Icons.whatshot, size: Window.height(context, 20), color: Colors.white),
+            Icon(Icons.search, size: Window.height(context, 20), color: Colors.white),
           ],
           onTap: (index) {
             setState(() {

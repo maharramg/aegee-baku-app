@@ -14,8 +14,7 @@ const textInputDecoration = InputDecoration(
 class Variable {
   static bool isAdmin;
   static bool isHome = true;
-  static String noProfilePicture =
-      "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png";
+  static String noProfilePicture = "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png";
   static Color homeIconColor = Colors.black;
 }
 
@@ -25,4 +24,14 @@ class ColorsGlobal {
   static Color settings = Colors.grey[200];
   static Color discount = Colors.grey[200];
   static Color search = Colors.grey[200];
+}
+
+class Window {
+  static double width(BuildContext context, double size) {
+    return MediaQuery.of(context).size.width * size / 393;
+  }
+
+  static double height(BuildContext context, double size) {
+    return MediaQuery.of(context).size.height * size / 737;
+  }
 }

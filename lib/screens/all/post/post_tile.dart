@@ -1,5 +1,6 @@
 import 'package:aegeeapp/models/post.dart';
 import 'package:aegeeapp/screens/all/post/post_screen.dart';
+import 'package:aegeeapp/shared/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,11 +13,7 @@ class PostTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PostScreen(post.title,
-                    post.date.toString(), post.image, post.type, post.text)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PostScreen(post.title, post.date.toString(), post.image, post.type, post.text)));
       },
       child: Container(
         height: 200,
@@ -47,14 +44,18 @@ class PostTile extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    post.title,
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  Container(
+                    width: Window.height(context, 220),
+                    child: Text(
+                      post.title,
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
                 ],
               ),
               Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     padding: EdgeInsets.all(3.0),

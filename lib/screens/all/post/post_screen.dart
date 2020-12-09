@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:aegeeapp/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:toast/toast.dart';
 import 'edit_post.dart';
@@ -17,41 +21,57 @@ class PostScreen extends StatelessWidget {
 
   String postID;
 
-  final CollectionReference postCollection =
-      Firestore.instance.collection('posts');
+  final CollectionReference postCollection = Firestore.instance.collection('posts');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Post"),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Center(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 30,
-                  ),
+      body: Center(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              titleSpacing: 20.0,
+              floating: false,
+              pinned: true,
+              snap: false,
+              expandedHeight: Window.height(context, 350),
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(title),
+                titlePadding: EdgeInsets.only(left: 50, bottom: 15),
+                background: Image(
+                  image: NetworkImage(image),
+                  fit: BoxFit.cover,
                 ),
               ),
-              Image(
-                image: NetworkImage(image),
-              ),
-              Text("Date: $date"),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(text),
-              ),
-            ],
-          ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([buildBody()]),
+            ),
+          ],
         ),
       ),
       floatingActionButton: adminFeature(context),
+    );
+  }
+
+  Widget buildBody() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+          Text("Date: $date"),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -75,16 +95,9 @@ class PostScreen extends StatelessWidget {
               label: 'Edit',
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: () async {
-                await postCollection
-                    .where("image", isEqualTo: image)
-                    .getDocuments()
-                    .then((value) => postID = value.documents[0].documentID);
+                await postCollection.where("image", isEqualTo: image).getDocuments().then((value) => postID = value.documents[0].documentID);
 
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            EditPost(postID, title, image, text, date, type)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EditPost(postID, title, image, text, date, type)));
               }),
           SpeedDialChild(
               child: Icon(Icons.delete_outline),
@@ -92,16 +105,11 @@ class PostScreen extends StatelessWidget {
               label: 'Delete',
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: () async {
-                await postCollection
-                    .where("image", isEqualTo: image)
-                    .getDocuments()
-                    .then((value) => postID = value.documents[0].documentID);
+                await postCollection.where("image", isEqualTo: image).getDocuments().then((value) => postID = value.documents[0].documentID);
 
                 await postCollection.document(postID).delete();
 
-                Toast.show("Deleted", context,
-                    duration: Toast.LENGTH_SHORT,
-                    backgroundColor: Colors.red);
+                Toast.show("Deleted", context, duration: Toast.LENGTH_SHORT, backgroundColor: Colors.red);
 
                 Navigator.popUntil(context, (route) => route.isFirst);
               }),

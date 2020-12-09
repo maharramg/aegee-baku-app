@@ -8,7 +8,6 @@ import 'package:aegeeapp/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class Webinar extends StatefulWidget {
   @override
   _WebinarState createState() => _WebinarState();
@@ -52,8 +51,7 @@ class _WebinarState extends State<Webinar> {
         child: Icon(Icons.add),
         elevation: 8.0,
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddPost()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddPost()));
         },
       );
     } else {

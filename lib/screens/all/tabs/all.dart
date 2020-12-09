@@ -54,8 +54,7 @@ class _AllState extends State<All> {
         child: Icon(Icons.add),
         elevation: 8.0,
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddPost()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddPost()));
         },
       );
     } else {

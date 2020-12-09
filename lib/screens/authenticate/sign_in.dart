@@ -38,19 +38,17 @@ class _SignInState extends State<SignIn> {
                     FadeAnimation(
                       1,
                       Container(
-                        height: 300,
+                        height: Window.height(context, 300),
                         decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/background1.png'),
-                              fit: BoxFit.cover),
+                          image: DecorationImage(image: AssetImage('assets/background1.png'), fit: BoxFit.cover),
                         ),
                         child: Stack(
                           children: <Widget>[
                             Positioned(
-                                top: 30,
-                                right: 60,
-                                width: 400,
-                                height: 200,
+                                top: Window.height(context, 30),
+                                right: Window.height(context, 60),
+                                width: Window.width(context, 400),
+                                height: Window.height(context, 200),
                                 child: FadeAnimation(
                                   1,
                                   Container(
@@ -63,22 +61,19 @@ class _SignInState extends State<SignIn> {
                                 )),
                             Positioned(
                               child: FadeAnimation(
-                                  1.4,
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(
-                                        30.0, 140.0, 60.0, 0),
-                                    child: Align(
-                                      alignment: Alignment.topRight,
-                                      child: Text(
-                                        "Login",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 40,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                1.4,
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(30.0, 140.0, 60.0, 0),
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      "Login",
+                                      style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),
                                     ),
-                                  )),
-                            )
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -89,7 +84,7 @@ class _SignInState extends State<SignIn> {
                         key: _formKey,
                         child: Column(
                           children: <Widget>[
-                            SizedBox(height: 20.0),
+                            SizedBox(height: Window.height(context, 20)),
                             FadeAnimation(
                               1.6,
                               TextFormField(
@@ -97,14 +92,13 @@ class _SignInState extends State<SignIn> {
                                   hintText: 'Email',
                                   icon: Icon(Icons.email),
                                 ),
-                                validator: (val) =>
-                                    val.isEmpty ? 'Enter an email' : null,
+                                validator: (val) => val.isEmpty ? 'Enter an email' : null,
                                 onChanged: (val) {
                                   setState(() => email = val);
                                 },
                               ),
                             ),
-                            SizedBox(height: 20.0),
+                            SizedBox(height: Window.height(context, 20)),
                             FadeAnimation(
                               1.8,
                               TextFormField(
@@ -113,63 +107,53 @@ class _SignInState extends State<SignIn> {
                                   hintText: 'Password',
                                   icon: Icon(Icons.fingerprint),
                                 ),
-                                validator: (val) => val.length < 6
-                                    ? 'Enter a password 6+ chars long'
-                                    : null,
+                                validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
                                 onChanged: (val) {
                                   setState(() => password = val);
                                 },
                               ),
                             ),
-                            SizedBox(height: 20.0),
+                            SizedBox(height: Window.height(context, 20)),
                             ButtonTheme(
                               minWidth: 100.0,
                               height: 40.0,
                               child: FadeAnimation(
                                 2,
                                 RaisedButton(
-                                    color: Colors.indigo[500],
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(50.0)),
-                                    child: Text(
-                                      'Sign In',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () async {
-                                      if (_formKey.currentState.validate()) {
-                                        setState(() => loading = true);
-                                        dynamic result = await _auth
-                                            .signInWithEmailAndPassword(
-                                                email, password);
-                                        Toast.show("Logged In", context,
-                                            duration: Toast.LENGTH_SHORT,
-                                            backgroundColor: Colors.lightGreen);
-                                        if (result == null) {
-                                          setState(() {
+                                  color: Colors.indigo[500],
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Window.height(context, 50))),
+                                  child: Text(
+                                    'Sign In',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    if (_formKey.currentState.validate()) {
+                                      setState(() => loading = true);
+                                      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
+                                      Toast.show("Logged In", context, duration: Toast.LENGTH_SHORT, backgroundColor: Colors.lightGreen);
+                                      if (result == null) {
+                                        setState(
+                                          () {
                                             loading = false;
-                                            error =
-                                                'Could not sign in with those credentials';
-                                          });
-                                          Toast.show("Error log in", context,
-                                              duration: Toast.LENGTH_LONG,
-                                              backgroundColor: Colors.red);
-                                        }
+                                            error = 'Could not sign in with those credentials';
+                                          },
+                                        );
+                                        Toast.show("Error log in", context, duration: Toast.LENGTH_LONG, backgroundColor: Colors.red);
                                       }
-                                    }),
+                                    }
+                                  },
+                                ),
                               ),
                             ),
-                            SizedBox(height: 12.0),
+                            SizedBox(height: Window.height(context, 12)),
                             ButtonTheme(
-                              minWidth: 100.0,
-                              height: 40.0,
+                              minWidth: Window.width(context, 100),
+                              height: Window.height(context, 40),
                               child: FadeAnimation(
                                 2,
                                 RaisedButton(
                                     color: Colors.indigo[500],
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(50.0)),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Window.height(context, 50))),
                                     child: Text(
                                       'Sign In as a Guest',
                                       style: TextStyle(color: Colors.white),
@@ -177,36 +161,28 @@ class _SignInState extends State<SignIn> {
                                     onPressed: () async {
                                       setState(() => loading = true);
                                       dynamic result = await _auth.signInAnon();
-                                      Toast.show("Logged In", context,
-                                          duration: Toast.LENGTH_SHORT,
-                                          backgroundColor: Colors.lightGreen);
+                                      Toast.show("Logged In", context, duration: Toast.LENGTH_SHORT, backgroundColor: Colors.lightGreen);
                                       if (result == null) {
                                         setState(() {
                                           loading = false;
                                           error = 'Something went wrong';
                                         });
-                                        Toast.show("Error log in", context,
-                                            duration: Toast.LENGTH_LONG,
-                                            backgroundColor: Colors.red);
+                                        Toast.show("Error log in", context, duration: Toast.LENGTH_LONG, backgroundColor: Colors.red);
                                       }
                                     }),
                               ),
                             ),
-                            SizedBox(
-                              height: 12,
-                            ),
+                            SizedBox(height: Window.height(context, 12)),
                             FadeAnimation(
                               2,
                               RichText(
                                 text: TextSpan(
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0),
+                                  style: TextStyle(color: Colors.grey, fontSize: 12.0),
                                   children: <TextSpan>[
                                     TextSpan(text: "Don't have an account? "),
                                     TextSpan(
                                       text: "Register",
-                                      style:
-                                          TextStyle(color: Colors.blueAccent),
+                                      style: TextStyle(color: Colors.blueAccent),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           widget.toggleView();
@@ -218,8 +194,7 @@ class _SignInState extends State<SignIn> {
                             ),
                             Text(
                               error,
-                              style:
-                                  TextStyle(color: Colors.red, fontSize: 14.0),
+                              style: TextStyle(color: Colors.red, fontSize: 14.0),
                             ),
                           ],
                         ),

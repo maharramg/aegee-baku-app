@@ -15,4 +15,3 @@ class UserData {
 
   UserData({this.uid, this.firstName, this.lastName, this.email, this.password, this.admin, this.avatar});
 }
-

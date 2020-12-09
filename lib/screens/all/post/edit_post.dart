@@ -11,16 +11,14 @@ class EditPost extends StatefulWidget {
   final String date;
   final String type;
 
-  EditPost(
-      this.postID, this.title, this.image, this.text, this.date, this.type);
+  EditPost(this.postID, this.title, this.image, this.text, this.date, this.type);
 
   @override
   _EditPostState createState() => _EditPostState();
 }
 
 class _EditPostState extends State<EditPost> {
-  final CollectionReference postCollection =
-      Firestore.instance.collection('posts');
+  final CollectionReference postCollection = Firestore.instance.collection('posts');
 
   final _formKey = GlobalKey<FormState>();
 
@@ -50,9 +48,7 @@ class _EditPostState extends State<EditPost> {
                   decoration: textInputDecoration.copyWith(
                     hintText: 'title',
                   ),
-                  validator: (val) => val.length < 1
-                      ? 'Title must be at least 1 character'
-                      : null,
+                  validator: (val) => val.length < 1 ? 'Title must be at least 1 character' : null,
                   onChanged: (val) {
                     title = val;
                     searchKey = title.substring(0, 1).toLowerCase();
@@ -103,9 +99,7 @@ class _EditPostState extends State<EditPost> {
                   decoration: textInputDecoration.copyWith(
                     hintText: 'text',
                   ),
-                  validator: (val) => val.length < 1
-                      ? 'Title must be at least 1 character'
-                      : null,
+                  validator: (val) => val.length < 1 ? 'Title must be at least 1 character' : null,
                   maxLines: null,
                   onChanged: (val) {
                     text = val;
@@ -116,8 +110,7 @@ class _EditPostState extends State<EditPost> {
                 ),
                 RaisedButton(
                   color: Colors.indigo[500],
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50.0)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
                   child: Text(
                     'Submit',
                     style: TextStyle(color: Colors.white),
@@ -126,49 +119,18 @@ class _EditPostState extends State<EditPost> {
                     if (_formKey.currentState.validate()) {
                       try {
                         if (title == null && text != null && type != null) {
-                          await postCollection
-                              .document(widget.postID)
-                              .updateData({
-                            'title': widget.title,
-                            'text': text,
-                            'type': type
-                          });
-                        } else if (text == null &&
-                            title != null &&
-                            type != null) {
-                          await postCollection
-                              .document(widget.postID)
-                              .updateData({
-                            'title': title,
-                            'text': widget.text,
-                            'type': type,
-                            'searchKey': searchKey
-                          });
-                        } else if (type == null &&
-                            text != null &&
-                            title != null) {
-                          await postCollection
-                              .document(widget.postID)
-                              .updateData({
-                            'title': title,
-                            'text': text,
-                            'type': widget.type
-                          });
+                          await postCollection.document(widget.postID).updateData({'title': widget.title, 'text': text, 'type': type});
+                        } else if (text == null && title != null && type != null) {
+                          await postCollection.document(widget.postID).updateData({'title': title, 'text': widget.text, 'type': type, 'searchKey': searchKey});
+                        } else if (type == null && text != null && title != null) {
+                          await postCollection.document(widget.postID).updateData({'title': title, 'text': text, 'type': widget.type});
                         } else if (text == null && title == null) {
-                          await postCollection
-                              .document(widget.postID)
-                              .updateData(
-                                  {'title': widget.title, 'text': widget.text});
+                          await postCollection.document(widget.postID).updateData({'title': widget.title, 'text': widget.text});
                         } else {
-                          await postCollection
-                              .document(widget.postID)
-                              .updateData(
-                                  {'title': title, 'text': text, 'type': type});
+                          await postCollection.document(widget.postID).updateData({'title': title, 'text': text, 'type': type});
                         }
 
-                        Toast.show("Edited", context,
-                            duration: Toast.LENGTH_SHORT,
-                            backgroundColor: Colors.lightGreen);
+                        Toast.show("Edited", context, duration: Toast.LENGTH_SHORT, backgroundColor: Colors.lightGreen);
                         Navigator.popUntil(context, (route) => route.isFirst);
                       } catch (e) {
                         print(e.message);

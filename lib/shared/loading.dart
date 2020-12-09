@@ -1,3 +1,4 @@
+import 'package:aegeeapp/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -9,7 +10,7 @@ class Loading extends StatelessWidget {
       child: Center(
         child: SpinKitChasingDots(
           color: Colors.indigo,
-          size: 50.0,
+          size: Window.height(context, 50),
         ),
       ),
     );

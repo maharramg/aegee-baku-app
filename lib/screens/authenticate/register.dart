@@ -42,9 +42,7 @@ class _RegisterState extends State<Register> {
                       Container(
                         height: 300,
                         decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/background1.png'),
-                              fit: BoxFit.cover),
+                          image: DecorationImage(image: AssetImage('assets/background1.png'), fit: BoxFit.cover),
                         ),
                         child: Stack(
                           children: <Widget>[
@@ -68,16 +66,12 @@ class _RegisterState extends State<Register> {
                               child: FadeAnimation(
                                 1.4,
                                 Container(
-                                  margin:
-                                      EdgeInsets.fromLTRB(30.0, 140.0, 20.0, 0),
+                                  margin: EdgeInsets.fromLTRB(30.0, 140.0, 20.0, 0),
                                   child: Align(
                                     alignment: Alignment.topRight,
                                     child: Text(
                                       "Register",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 40,
-                                          fontWeight: FontWeight.bold),
+                                      style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),
@@ -100,9 +94,7 @@ class _RegisterState extends State<Register> {
                                   hintText: 'First Name',
                                   icon: Icon(Icons.person),
                                 ),
-                                validator: (val) => val.isEmpty
-                                    ? 'Enter your first name'
-                                    : null,
+                                validator: (val) => val.isEmpty ? 'Enter your first name' : null,
                                 onChanged: (val) {
                                   setState(() => firstName = val);
                                 },
@@ -118,8 +110,7 @@ class _RegisterState extends State<Register> {
                                   hintText: 'Last Name',
                                   icon: Icon(Icons.person),
                                 ),
-                                validator: (val) =>
-                                    val.isEmpty ? 'Enter your last name' : null,
+                                validator: (val) => val.isEmpty ? 'Enter your last name' : null,
                                 onChanged: (val) {
                                   setState(() => lastName = val);
                                 },
@@ -133,8 +124,7 @@ class _RegisterState extends State<Register> {
                                   hintText: 'Email',
                                   icon: Icon(Icons.email),
                                 ),
-                                validator: (val) =>
-                                    val.isEmpty ? 'Enter an email' : null,
+                                validator: (val) => val.isEmpty ? 'Enter an email' : null,
                                 onChanged: (val) {
                                   setState(() => email = val);
                                 },
@@ -149,9 +139,7 @@ class _RegisterState extends State<Register> {
                                   hintText: 'Password',
                                   icon: Icon(Icons.fingerprint),
                                 ),
-                                validator: (val) => val.length < 6
-                                    ? 'Enter a password 6+ chars long'
-                                    : null,
+                                validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
                                 onChanged: (val) {
                                   setState(() => password = val);
                                 },
@@ -184,9 +172,7 @@ class _RegisterState extends State<Register> {
                                 2,
                                 RaisedButton(
                                   color: Colors.indigo[500],
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30.0)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
                                   child: Text(
                                     'Register',
                                     style: TextStyle(color: Colors.white),
@@ -194,14 +180,12 @@ class _RegisterState extends State<Register> {
                                   onPressed: () async {
                                     if (_formKey.currentState.validate()) {
                                       setState(() => loading = true);
-                                      dynamic result = await _auth
-                                          .registerWithEmailAndPassword(firstName, lastName, email, password);
+                                      dynamic result = await _auth.registerWithEmailAndPassword(firstName, lastName, email, password);
                                       if (result == null) {
                                         setState(
                                           () {
                                             loading = false;
-                                            error =
-                                                'Please supply a valid email';
+                                            error = 'Please supply a valid email';
                                           },
                                         );
                                       }
@@ -215,14 +199,12 @@ class _RegisterState extends State<Register> {
                               2,
                               RichText(
                                 text: TextSpan(
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0),
+                                  style: TextStyle(color: Colors.grey, fontSize: 12.0),
                                   children: <TextSpan>[
                                     TextSpan(text: "Already have an account? "),
                                     TextSpan(
                                       text: "Sign in",
-                                      style:
-                                          TextStyle(color: Colors.blueAccent),
+                                      style: TextStyle(color: Colors.blueAccent),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           widget.toggleView();
@@ -234,8 +216,7 @@ class _RegisterState extends State<Register> {
                             ),
                             Text(
                               error,
-                              style:
-                                  TextStyle(color: Colors.red, fontSize: 14.0),
+                              style: TextStyle(color: Colors.red, fontSize: 14.0),
                             ),
                           ],
                         ),

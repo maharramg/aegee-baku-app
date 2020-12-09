@@ -1,13 +1,12 @@
 import 'package:aegeeapp/models/post.dart';
 import 'package:aegeeapp/models/user.dart';
+import 'package:aegeeapp/screens/all/post/add_post.dart';
 import 'package:aegeeapp/screens/all/post/post_list.dart';
 import 'package:aegeeapp/services/database.dart';
 import 'package:aegeeapp/shared/constants.dart';
 import 'package:aegeeapp/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../post/add_post.dart';
 
 class Universities extends StatefulWidget {
   @override
@@ -52,8 +51,7 @@ class _UniversitiesState extends State<Universities> {
         child: Icon(Icons.add),
         elevation: 8.0,
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddPost()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddPost()));
         },
       );
     } else {
